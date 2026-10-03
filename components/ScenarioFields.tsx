@@ -35,7 +35,7 @@ export function ScenarioFields({ value, errors, onChange, onReset }: Props) {
         onBlur={key === 'price' ? () => setPriceFocused(false) : undefined}
         onChange={event => onChange(key, key === 'price' ? event.target.value.replace(/,/g, '') : event.target.value)} />
       {errors[key] ? <p className="field-error" id={`${id}-error`} role="alert">{errors[key]}</p>
-        : <p className="field-hint" id={`${id}-hint`}>{suggestion.status === 'observed' ? 'CBK 2025 average · editable' : 'Illustrative · editable'}</p>}
+        : <p className="field-hint" id={`${id}-hint`}>{key === 'monthlyRent' ? 'Use the rent for a similar home in the same area. Illustrative · editable' : suggestion.status === 'observed' ? 'CBK 2025 average · editable' : 'Illustrative · editable'}</p>}
     </div>;
   };
   return <section className="input-panel" aria-labelledby="inputs-heading">

@@ -105,6 +105,11 @@ describe('structured scenario control', () => {
 });
 
 describe('comparison explanations', () => {
+  it('asks for rent of a comparable home beside the rent input', () => {
+    render(<Home />);
+    const rent = screen.getByRole('spinbutton', { name: /monthly rent/i });
+    expect(rent.closest('.field')?.textContent).toMatch(/similar home in the same area/i);
+  });
   it('shows rent growth with primary inputs and names cash paid beside ownership', () => {
     render(<Home />);
     expect(screen.getByRole('spinbutton', { name: /annual rent growth/i }).closest('details')).toBeNull();
