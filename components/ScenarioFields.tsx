@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { ScenarioInput } from '../lib/scenario';
 import { SUGGESTIONS } from '../lib/defaults';
 import { Input } from '@/components/ui/input';
@@ -9,8 +10,8 @@ const names: Record<keyof ScenarioInput, string> = {
   maintenancePct: 'Annual maintenance', insurancePct: 'Annual insurance',
   acquisitionCostPct: 'Purchase costs',
 };
-const primary: (keyof ScenarioInput)[] = ['price', 'monthlyRent', 'termYears', 'depositPct', 'mortgageRatePct'];
-const extra: (keyof ScenarioInput)[] = ['rentGrowthPct', 'maintenancePct', 'insurancePct', 'acquisitionCostPct'];
+const primary: (keyof ScenarioInput)[] = ['price', 'monthlyRent', 'termYears', 'depositPct', 'mortgageRatePct', 'rentGrowthPct'];
+const extra: (keyof ScenarioInput)[] = ['maintenancePct', 'insurancePct', 'acquisitionCostPct'];
 export const FIELD_NAMES = names;
 
 interface Props {
@@ -20,15 +21,19 @@ interface Props {
   onReset: () => void;
 }
 export function ScenarioFields({ value, errors, onChange, onReset }: Props) {
+  const [priceFocused, setPriceFocused] = useState(false);
   const field = (key: keyof ScenarioInput) => {
     const suggestion = SUGGESTIONS[key];
     const id = `field-${key}`;
     return <div className="field" key={key}>
       <div className="field-head"><label htmlFor={id}>{names[key]}</label><span>{suggestion.unit}</span></div>
-      <Input id={id} type="number" inputMode="decimal" min={key === 'price' ? 1 : undefined}
-        step={key === 'termYears' ? 1 : 'any'} value={value[key]}
+      <Input id={id} type={key === 'price' ? 'text' : 'number'} inputMode={key === 'price' ? 'numeric' : 'decimal'}
+        step={key === 'price' ? undefined : key === 'termYears' ? 1 : 'any'}
+        value={key === 'price' && !priceFocused && /^\d+$/.test(value[key]) ? Number(value[key]).toLocaleString('en-KE') : value[key]}
         aria-invalid={Boolean(errors[key])} aria-describedby={errors[key] ? `${id}-error` : `${id}-hint`}
-        onChange={event => onChange(key, event.target.value)} />
+        onFocus={key === 'price' ? () => setPriceFocused(true) : undefined}
+        onBlur={key === 'price' ? () => setPriceFocused(false) : undefined}
+        onChange={event => onChange(key, key === 'price' ? event.target.value.replace(/,/g, '') : event.target.value)} />
       {errors[key] ? <p className="field-error" id={`${id}-error`} role="alert">{errors[key]}</p>
         : <p className="field-hint" id={`${id}-hint`}>{suggestion.status === 'observed' ? 'CBK 2025 average · editable' : 'Illustrative · editable'}</p>}
     </div>;
@@ -36,6 +41,6 @@ export function ScenarioFields({ value, errors, onChange, onReset }: Props) {
   return <section className="input-panel" aria-labelledby="inputs-heading">
     <div className="panel-heading"><div><p className="eyebrow">YOUR SCENARIO</p><h2 id="inputs-heading">Set the numbers</h2></div><Button variant="outline" size="sm" onClick={onReset}>Reset assumptions</Button></div>
     <div className="fields-grid">{primary.map(field)}</div>
-    <details className="advanced"><summary>More assumptions <span>Growth, upkeep and fees</span></summary><div className="fields-grid">{extra.map(field)}</div></details>
+    <details className="advanced"><summary>More assumptions <span>Upkeep and fees</span></summary><div className="fields-grid">{extra.map(field)}</div></details>
   </section>;
 }

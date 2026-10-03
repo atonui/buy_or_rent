@@ -68,7 +68,7 @@ describe('calculator page', () => {
   it('blocks results for blank price and names the error', async () => {
     const user = userEvent.setup();
     render(<Home />);
-    await user.clear(screen.getByRole('spinbutton', { name: /purchase price/i }));
+    await user.clear(screen.getByRole('textbox', { name: /purchase price/i }));
     expect(screen.getByText(/price must be greater than zero|enter a valid number/i)).toBeTruthy();
     expect(screen.queryByTestId('renter-cash')).toBeNull();
   });
@@ -82,7 +82,7 @@ describe('adjustable horizon', () => {
     await user.clear(term);
     await user.type(term, '20');
     expect(screen.getByRole('heading', { name: /cash paid, year by year/i })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: /the cost over 20 years/i })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /cash paid over 20 years/i })).toBeTruthy();
   });
 });
 
@@ -105,6 +105,25 @@ describe('structured scenario control', () => {
 });
 
 describe('comparison explanations', () => {
+  it('shows rent growth with primary inputs and names cash paid beside ownership', () => {
+    render(<Home />);
+    expect(screen.getByRole('spinbutton', { name: /annual rent growth/i }).closest('details')).toBeNull();
+    expect(screen.getByRole('heading', { name: /cash paid over 15 years/i })).toBeTruthy();
+    expect(screen.getByText(/You own the home at the end/i)).toBeTruthy();
+  });
+  it('formats purchase price on blur while keeping the numeric value editable', async () => {
+    const user = userEvent.setup();
+    render(<Home />);
+    const price = screen.getByRole('textbox', { name: /purchase price/i }) as HTMLInputElement;
+    expect(price.value).toBe('12,000,000');
+    await user.click(price);
+    expect(price.value).toBe('12000000');
+    await user.clear(price);
+    await user.type(price, '13500000');
+    await user.tab();
+    expect(price.value).toBe('13,500,000');
+    expect(screen.getByRole('heading', { name: /cash paid over 15 years/i })).toBeTruthy();
+  });
   it('compares housing payments without hypothetical investing', () => {
     render(<Home />);
     expect(screen.getAllByText('buy or rent?').length).toBeGreaterThan(0);
