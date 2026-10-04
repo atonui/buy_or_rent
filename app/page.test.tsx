@@ -105,6 +105,14 @@ describe('structured scenario control', () => {
 });
 
 describe('comparison explanations', () => {
+  it('explains the three ownership costs beside their inputs', async () => {
+    const user = userEvent.setup();
+    render(<Home />);
+    await user.click(screen.getByText(/More assumptions/i));
+    expect(screen.getByRole('spinbutton', { name: /purchase costs/i }).closest('.field')?.textContent).toMatch(/one-time buying fees/i);
+    expect(screen.getByRole('spinbutton', { name: /annual maintenance/i }).closest('.field')?.textContent).toMatch(/repairs and upkeep/i);
+    expect(screen.getByRole('spinbutton', { name: /annual insurance/i }).closest('.field')?.textContent).toMatch(/property insurance/i);
+  });
   it('asks for rent of a comparable home beside the rent input', () => {
     render(<Home />);
     const rent = screen.getByRole('textbox', { name: /monthly rent/i });
@@ -156,5 +164,35 @@ describe('comparison explanations', () => {
     expect(screen.getByText('Starting monthly rent')).toBeTruthy();
     expect(screen.getByText('Final monthly rent')).toBeTruthy();
     expect(screen.getByText(/same property over the same period/i)).toBeTruthy();
+  });
+});
+
+describe('copy comparison', () => {
+  it('copies edited assumptions, cash totals, caveat, and site URL', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+    render(<Home />);
+    const rent = screen.getByRole('textbox', { name: /monthly rent/i });
+    await user.clear(rent);
+    await user.type(rent, '70000');
+    await user.click(screen.getByRole('button', { name: /copy comparison/i }));
+    expect(writeText).toHaveBeenCalledTimes(1);
+    const copied = writeText.mock.calls[0][0] as string;
+    expect(copied).toContain('Monthly rent: Ksh 70,000');
+    expect(copied).toContain('Annual maintenance: 1%');
+    expect(copied).toMatch(/Buy: Ksh [\d,]+/);
+    expect(copied).toMatch(/Rent: Ksh [\d,]+/);
+    expect(copied).toMatch(/buying leaves you owning the property/i);
+    expect(copied).toContain('https://www.buyorrent.co.ke/');
+    expect(screen.getByRole('status').textContent).toMatch(/copied/i);
+  });
+  it('keeps the comparison visible if copying fails', async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: vi.fn().mockRejectedValue(new Error('denied')) } });
+    render(<Home />);
+    await user.click(screen.getByRole('button', { name: /copy comparison/i }));
+    expect((await screen.findByRole('status')).textContent).toMatch(/could not copy/i);
+    expect(screen.getByTestId('renter-cash')).toBeTruthy();
   });
 });

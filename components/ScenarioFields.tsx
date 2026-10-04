@@ -12,6 +12,11 @@ const names: Record<keyof ScenarioInput, string> = {
 };
 const primary: (keyof ScenarioInput)[] = ['price', 'monthlyRent', 'termYears', 'depositPct', 'mortgageRatePct', 'rentGrowthPct'];
 const extra: (keyof ScenarioInput)[] = ['maintenancePct', 'insurancePct', 'acquisitionCostPct'];
+const ownershipHints: Partial<Record<keyof ScenarioInput, string>> = {
+  acquisitionCostPct: 'One-time buying fees as a share of the purchase price. Replace the illustration with your own estimates.',
+  maintenancePct: 'An annual allowance for repairs and upkeep, as a share of the purchase price.',
+  insurancePct: 'An annual property insurance allowance, as a share of the purchase price. Use a quote if you have one.',
+};
 export const FIELD_NAMES = names;
 
 interface Props {
@@ -36,7 +41,7 @@ export function ScenarioFields({ value, errors, onChange, onReset }: Props) {
         onBlur={isAmount ? () => setFocusedAmount(null) : undefined}
         onChange={event => onChange(key, isAmount ? event.target.value.replace(/,/g, '') : event.target.value)} />
       {errors[key] ? <p className="field-error" id={`${id}-error`} role="alert">{errors[key]}</p>
-        : <p className="field-hint" id={`${id}-hint`}>{key === 'monthlyRent' ? 'Use the rent for a similar home in the same area. Illustrative · editable' : suggestion.status === 'observed' ? 'CBK 2025 average · editable' : 'Illustrative · editable'}</p>}
+        : <p className="field-hint" id={`${id}-hint`}>{ownershipHints[key] ? <>{ownershipHints[key]} <span>Illustrative · editable</span></> : key === 'monthlyRent' ? 'Use the rent for a similar home in the same area. Illustrative · editable' : suggestion.status === 'observed' ? 'CBK 2025 average · editable' : 'Illustrative · editable'}</p>}
     </div>;
   };
   return <section className="input-panel" aria-labelledby="inputs-heading">
