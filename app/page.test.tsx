@@ -24,7 +24,7 @@ describe('anonymous comparison measurement', () => {
     });
     render(<Home />);
     expect(events).toEqual([]);
-    const rent = screen.getByRole('spinbutton', { name: /monthly rent/i });
+    const rent = screen.getByRole('textbox', { name: /monthly rent/i });
     fireEvent.change(rent, { target: { value: '66000' } });
     act(() => onIntersect([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
     expect(events).toEqual(['Comparison Started']);
@@ -45,7 +45,7 @@ describe('anonymous comparison measurement', () => {
       disconnect() {}
     });
     render(<Home />);
-    const rent = screen.getByRole('spinbutton', { name: /monthly rent/i });
+    const rent = screen.getByRole('textbox', { name: /monthly rent/i });
     fireEvent.change(rent, { target: { value: '66000' } });
     act(() => onIntersect([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
     fireEvent.change(rent, { target: { value: '' } });
@@ -57,7 +57,7 @@ describe('calculator page', () => {
   it('updates the comparison when rent changes, then resets', async () => {
     const user = userEvent.setup();
     render(<Home />);
-    const rent = screen.getByRole('spinbutton', { name: /monthly rent/i });
+    const rent = screen.getByRole('textbox', { name: /monthly rent/i });
     const original = screen.getByTestId('renter-cash').textContent;
     await user.clear(rent);
     await user.type(rent, '100000');
@@ -107,7 +107,7 @@ describe('structured scenario control', () => {
 describe('comparison explanations', () => {
   it('asks for rent of a comparable home beside the rent input', () => {
     render(<Home />);
-    const rent = screen.getByRole('spinbutton', { name: /monthly rent/i });
+    const rent = screen.getByRole('textbox', { name: /monthly rent/i });
     expect(rent.closest('.field')?.textContent).toMatch(/similar home in the same area/i);
   });
   it('shows rent growth with primary inputs and names cash paid beside ownership', () => {
@@ -128,6 +128,20 @@ describe('comparison explanations', () => {
     await user.tab();
     expect(price.value).toBe('13,500,000');
     expect(screen.getByRole('heading', { name: /cash paid over 15 years/i })).toBeTruthy();
+  });
+  it('formats monthly rent on blur and updates the comparison from plain digits', async () => {
+    const user = userEvent.setup();
+    render(<Home />);
+    const rent = screen.getByRole('textbox', { name: /monthly rent/i }) as HTMLInputElement;
+    const original = screen.getByTestId('renter-cash').textContent;
+    expect(rent.value).toBe('65,000');
+    await user.click(rent);
+    expect(rent.value).toBe('65000');
+    await user.clear(rent);
+    await user.type(rent, '100000');
+    await user.tab();
+    expect(rent.value).toBe('100,000');
+    expect(screen.getByTestId('renter-cash').textContent).not.toBe(original);
   });
   it('compares housing payments without hypothetical investing', () => {
     render(<Home />);

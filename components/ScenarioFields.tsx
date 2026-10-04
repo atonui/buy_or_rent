@@ -21,19 +21,20 @@ interface Props {
   onReset: () => void;
 }
 export function ScenarioFields({ value, errors, onChange, onReset }: Props) {
-  const [priceFocused, setPriceFocused] = useState(false);
+  const [focusedAmount, setFocusedAmount] = useState<'price' | 'monthlyRent' | null>(null);
   const field = (key: keyof ScenarioInput) => {
     const suggestion = SUGGESTIONS[key];
     const id = `field-${key}`;
+    const isAmount = key === 'price' || key === 'monthlyRent';
     return <div className="field" key={key}>
       <div className="field-head"><label htmlFor={id}>{names[key]}</label><span>{suggestion.unit}</span></div>
-      <Input id={id} type={key === 'price' ? 'text' : 'number'} inputMode={key === 'price' ? 'numeric' : 'decimal'}
-        step={key === 'price' ? undefined : key === 'termYears' ? 1 : 'any'}
-        value={key === 'price' && !priceFocused && /^\d+$/.test(value[key]) ? Number(value[key]).toLocaleString('en-KE') : value[key]}
+      <Input id={id} type={isAmount ? 'text' : 'number'} inputMode={isAmount ? 'numeric' : 'decimal'}
+        step={isAmount ? undefined : key === 'termYears' ? 1 : 'any'}
+        value={isAmount && focusedAmount !== key && /^\d+$/.test(value[key]) ? Number(value[key]).toLocaleString('en-KE') : value[key]}
         aria-invalid={Boolean(errors[key])} aria-describedby={errors[key] ? `${id}-error` : `${id}-hint`}
-        onFocus={key === 'price' ? () => setPriceFocused(true) : undefined}
-        onBlur={key === 'price' ? () => setPriceFocused(false) : undefined}
-        onChange={event => onChange(key, key === 'price' ? event.target.value.replace(/,/g, '') : event.target.value)} />
+        onFocus={isAmount ? () => setFocusedAmount(key) : undefined}
+        onBlur={isAmount ? () => setFocusedAmount(null) : undefined}
+        onChange={event => onChange(key, isAmount ? event.target.value.replace(/,/g, '') : event.target.value)} />
       {errors[key] ? <p className="field-error" id={`${id}-error`} role="alert">{errors[key]}</p>
         : <p className="field-hint" id={`${id}-hint`}>{key === 'monthlyRent' ? 'Use the rent for a similar home in the same area. Illustrative · editable' : suggestion.status === 'observed' ? 'CBK 2025 average · editable' : 'Illustrative · editable'}</p>}
     </div>;
