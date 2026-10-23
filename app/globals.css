@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
 :root { --background:#f5f3ec;--foreground:#173d36;--card:#fffefa;--card-foreground:#173d36;--primary:#195d50;--primary-foreground:#fffefa;--secondary:#e7eee8;--secondary-foreground:#173d36;--muted:#e8ebe5;--muted-foreground:#667b73;--accent:#dce9df;--accent-foreground:#173d36;--destructive:#a63a2c;--border:#d9dfd8;--input:#cbd6cd;--ring:#7aab98;--radius:.75rem;--font-sans:Arial,Helvetica,sans-serif; }
@@ -11,3 +12,35 @@
 @media(max-width:620px){.intro h1{font-size:clamp(36px,11vw,47px);letter-spacing:-.04em}.panel-heading{align-items:flex-start;flex-wrap:wrap}.panel-heading button{min-height:44px}.fields-grid{grid-template-columns:1fr;gap:18px}.field-head{display:flex}.field-head span{margin-top:0}.field input{padding:0 13px}.field-hint{font-size:12px;line-height:1.45}.advanced summary,.data-table summary{min-height:44px;align-items:center}.site-header a{display:inline-flex;align-items:center;min-height:44px}.chart-inspect select{min-height:44px}.payment-strip{flex-wrap:wrap}.breakdown-card dl div{flex-wrap:wrap}.breakdown-card dd{white-space:normal;text-align:right}}
 @media(max-width:420px){.comparison-row{grid-template-columns:1fr;gap:16px}.comparison-row>div+div{border-left:0;border-top:1px solid #d7dfd5;padding:14px 0 0}.comparison-row strong{font-size:clamp(22px,6vw,28px);white-space:nowrap;overflow-wrap:normal}.legend{flex-wrap:wrap}.legend span:last-child{margin-left:0;flex-basis:100%}}
 .share-comparison{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.share-comparison button{min-height:44px;padding:9px 17px;border:1px solid #195d50;border-radius:9px;background:#fffefa;color:#173d36;font-weight:700;cursor:pointer}.share-comparison button:hover{background:#e7eee8}.share-comparison button:focus-visible{outline:3px solid #7aab98;outline-offset:2px}.share-comparison [role=status]{color:#315b4d;font-size:13px;line-height:1.4}
+
+/* Typography: a readable introduction and compact, consistent calculator data. */
+:root{--font-sans:Inter,Arial,Helvetica,sans-serif}
+body{font-family:var(--font-sans);font-size:16px;line-height:1.55}
+h1,h2,h3{font-family:var(--font-sans)}
+.intro h1{font-family:var(--font-sans);font-size:clamp(48px,4.5vw,60px);font-weight:800;line-height:1.12;letter-spacing:-.02em}
+.intro p:not(.eyebrow){font-size:18px;line-height:1.55}
+.intro-note strong{font-family:var(--font-sans);font-weight:700}
+.panel-heading h2,.result-intro h2,.breakdown h2,.sources h2,.seo-guide h2,.invalid-panel h2{font-family:var(--font-sans);font-size:34px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.breakdown h2,.sources h2,.seo-guide h2{font-size:36px}
+.result-card h3,.breakdown-card h3,.source-list h3,.guide-grid h3{font-family:var(--font-sans);font-size:23px;font-weight:600;line-height:1.3;letter-spacing:0}
+.result-intro p:not(.eyebrow),.breakdown>div>p:not(.eyebrow),.sources>div>p:not(.eyebrow),.guide-grid p{font-size:16px;line-height:1.55}
+.field-head label{font-size:14px;font-weight:600;line-height:1.4}
+.field input{font-weight:500}
+.panel-heading button{font-size:14px}
+.card-top{font-size:12px}
+.eyebrow{font-weight:600}
+.field-head span,.field-hint,.field-error,.review-date,.source-row p,.source-row a,.review-date a,.eyebrow{font-size:12px;line-height:1.4}
+.field input{font-size:17px;line-height:1.4}
+.result-card p,.ownership-note,.breakdown-card dl div,.payment-strip,.chart-inspect,.chart-explanation,.data-table,.source-row>div,.share-comparison [role=status]{font-size:14px;line-height:1.5}
+.result-card .comparison-row span{font-size:14px;line-height:1.4}
+.result-card .comparison-row strong{letter-spacing:-.02em}
+.result-card .comparison-row small,.breakdown-card p,.legend,footer{font-size:12px;line-height:1.4}
+.source-list h3{margin-bottom:16px}
+td,th{font-size:14px;line-height:1.4}
+@media(max-width:620px){
+  .intro h1{font-size:clamp(32px,9vw,36px);line-height:1.17;letter-spacing:-.02em}
+  .intro p:not(.eyebrow){font-size:16px;line-height:1.55}
+  .panel-heading h2,.result-intro h2,.breakdown h2,.sources h2,.seo-guide h2,.invalid-panel h2{font-size:26px;line-height:1.25}
+  .result-card h3,.breakdown-card h3,.source-list h3,.guide-grid h3{font-size:19px;line-height:1.3}
+  .field input{font-size:16px}
+}
