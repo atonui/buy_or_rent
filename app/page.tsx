@@ -23,6 +23,7 @@ export default function Home() {
   const [edited, setEdited] = useState(false);
   const [resultsVisible, setResultsVisible] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
+  const [copying, setCopying] = useState(false);
   const resultsRef = useRef<HTMLElement>(null);
   const changeField = (key: keyof ScenarioInput, value: string) => {
     recordOnce('Comparison Started');
@@ -76,7 +77,7 @@ export default function Home() {
   const result = valid ? calculateScenario(input) : null;
   const year = valid ? input.termYears : DEFAULT_SCENARIO.termYears;
   const copyComparison = async () => {
-    if (!result) return;
+    if (!result || copying) return;
     const summary = [
       `buy or rent? — ${year}-year comparison`,
       `Purchase price: ${plainMoney(input.price)}`,
@@ -96,11 +97,15 @@ export default function Home() {
       'These are nominal cash totals. Buying leaves you owning the property at the end; the totals do not subtract its value. Figures are illustrative and exclude future interest-rate changes, taxes, moving costs and renovations.',
       'https://www.buyorrent.co.ke/',
     ].join('\n');
+    setCopyStatus('');
+    setCopying(true);
     try {
       await navigator.clipboard.writeText(summary);
       setCopyStatus('Comparison copied.');
     } catch {
       setCopyStatus('Could not copy. Please check your browser’s clipboard permission and try again.');
+    } finally {
+      setCopying(false);
     }
   };
   useEffect(() => {
@@ -119,7 +124,7 @@ export default function Home() {
           <div className="result-card"><div className="card-top"><span className="card-icon cash-icon" aria-hidden="true">↗</span><span>CASH PAID</span></div><h3>Total out of pocket</h3><div className="comparison-row"><div><span>Buy</span><strong>{money.format(result.ownerCashPaid)}</strong><small>You own the home at the end.</small></div><div><span>Rent</span><strong data-testid="renter-cash">{money.format(result.renterCashPaid)}</strong></div></div><p>{result.ownerCashPaid > result.renterCashPaid ? `Buying uses ${money.format(result.ownerCashPaid - result.renterCashPaid)} more cash.` : `Renting uses ${money.format(result.renterCashPaid - result.ownerCashPaid)} more cash.`}</p><p className="result-assumptions">Calculated using {input.rentGrowthPct}% annual rent growth and a fixed {input.mortgageRatePct}% mortgage rate.</p></div>
           <p className="ownership-note">Buying leaves you owning the property at the end of the mortgage. These totals compare cash paid; they do not subtract the property’s value.</p>
           <div className="payment-strip"><span>Indicative monthly mortgage payment</span><strong>{money.format(result.monthlyPayment)}</strong></div>
-          <div className="share-comparison"><button type="button" onClick={copyComparison}>Copy comparison</button>{copyStatus && <span role="status">{copyStatus}</span>}</div>
+          <div className="share-comparison"><button type="button" onClick={copyComparison} disabled={copying}>{copying ? 'Copying…' : 'Copy comparison'}</button>{copyStatus && <span role="status">{copyStatus}</span>}</div>
         </> : <div className="invalid-panel" role="status"><h2>Check your inputs</h2><p>Fix the highlighted fields to see the comparison.</p></div>}
       </section>
     </div>

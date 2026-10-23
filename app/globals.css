@@ -43,3 +43,31 @@ td,th{font-size:14px;line-height:1.4}
   .result-card h3,.breakdown-card h3,.source-list h3,.guide-grid h3{font-size:19px;line-height:1.3}
   .field input{font-size:16px}
 }
+
+/* Action hierarchy: one clear primary action, with reset kept secondary. */
+.share-comparison button,
+.input-panel .panel-heading button{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:10px 18px;border-radius:9px;
+  font-size:14px;font-weight:600;line-height:1.4;
+  transition:background-color .15s ease,border-color .15s ease,color .15s ease,transform .15s ease;
+}
+.share-comparison button{
+  border:1px solid #195d50;background:#195d50;color:#fffefa;
+}
+.share-comparison button:hover:not(:disabled){background:#124d42;border-color:#124d42;color:#fffefa}
+.share-comparison button:active:not(:disabled){background:#0d4238;transform:translateY(1px)}
+.share-comparison button:disabled{background:#526e63;border-color:#526e63;color:#fffefa;cursor:wait;opacity:1}
+.input-panel .panel-heading button{
+  border:1px solid #9cafa3;background:#fffefa;color:#173d36;box-shadow:none;
+}
+.input-panel .panel-heading button:hover{background:#e7eee8;border-color:#195d50;color:#173d36}
+.input-panel .panel-heading button:active{background:#dce9df;transform:translateY(1px)}
+.share-comparison button:focus-visible,
+.input-panel .panel-heading button:focus-visible,
+.advanced summary:focus-visible,
+.data-table summary:focus-visible,
+.site-header a:focus-visible{
+  outline:3px solid #7aab98;outline-offset:3px;
+}
+.advanced summary:hover,.data-table summary:hover{color:#195d50}

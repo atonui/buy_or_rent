@@ -168,6 +168,21 @@ describe('comparison explanations', () => {
 });
 
 describe('copy comparison', () => {
+  it('shows progress and prevents another copy while the clipboard is pending', async () => {
+    const user = userEvent.setup();
+    let finishCopy: (() => void) | undefined;
+    const writeText = vi.fn().mockImplementation(() => new Promise<void>(resolve => { finishCopy = resolve; }));
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+    render(<Home />);
+    await user.click(screen.getByRole('button', { name: 'Copy comparison' }));
+    const button = screen.getByRole('button', { name: 'Copying…' }) as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    await user.click(button);
+    expect(writeText).toHaveBeenCalledTimes(1);
+    await act(async () => finishCopy?.());
+    expect(screen.getByRole('button', { name: 'Copy comparison' }).hasAttribute('disabled')).toBe(false);
+    expect(screen.getByRole('status').textContent).toMatch(/copied/i);
+  });
   it('copies edited assumptions, cash totals, caveat, and site URL', async () => {
     const user = userEvent.setup();
     const writeText = vi.fn().mockResolvedValue(undefined);
