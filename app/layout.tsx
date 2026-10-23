@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { publicSiteUrl } from '../lib/site-url';
+import '@fontsource-variable/inter/wght.css';
 import './globals.css';
 const siteUrl = publicSiteUrl();
 export const metadata: Metadata = {

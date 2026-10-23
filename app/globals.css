@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "../vendor/shadcn-tailwind-4.13.0.css";
 :root { --background:#f5f3ec;--foreground:#173d36;--card:#fffefa;--card-foreground:#173d36;--primary:#195d50;--primary-foreground:#fffefa;--secondary:#e7eee8;--secondary-foreground:#173d36;--muted:#e8ebe5;--muted-foreground:#667b73;--accent:#dce9df;--accent-foreground:#173d36;--destructive:#a63a2c;--border:#d9dfd8;--input:#cbd6cd;--ring:#7aab98;--radius:.75rem;--font-sans:Arial,Helvetica,sans-serif; }
@@ -14,7 +13,7 @@
 .share-comparison{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.share-comparison button{min-height:44px;padding:9px 17px;border:1px solid #195d50;border-radius:9px;background:#fffefa;color:#173d36;font-weight:700;cursor:pointer}.share-comparison button:hover{background:#e7eee8}.share-comparison button:focus-visible{outline:3px solid #7aab98;outline-offset:2px}.share-comparison [role=status]{color:#315b4d;font-size:13px;line-height:1.4}
 
 /* Typography: a readable introduction and compact, consistent calculator data. */
-:root{--font-sans:Inter,Arial,Helvetica,sans-serif}
+:root{--font-sans:'Inter Variable',Arial,Helvetica,sans-serif}
 body{font-family:var(--font-sans);font-size:16px;line-height:1.55}
 h1,h2,h3{font-family:var(--font-sans)}
 .intro h1{font-family:var(--font-sans);font-size:clamp(48px,4.5vw,60px);font-weight:800;line-height:1.12;letter-spacing:-.02em}
