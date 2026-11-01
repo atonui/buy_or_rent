@@ -20,11 +20,11 @@ export function ComparisonChart({ annual }: { annual: AnnualPoint[] }) {
     <div className="legend"><span><i className="legend-owner" /> Buy</span><span><i className="legend-rent" /> Rent</span><span>KES millions</span></div>
     <svg className="line-chart" viewBox="0 0 750 270" role="img" aria-label="Year-by-year cumulative cash paid for buying and renting">
       {[0, 0.5, 1].map(fraction => { const yy = 225 - fraction * 185; return <g key={fraction}><line x1="52" x2="702" y1={yy} y2={yy} stroke="#d8dfdb" strokeDasharray="4 6" /><text x="44" y={yy + 4} textAnchor="end" fontSize="12" fill="#64756f">{shortKes(low + fraction * (high - low))}</text></g>; })}
-      <polyline points={points('ownerCashPaid')} fill="none" stroke="#116a5b" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-      <polyline points={points('renterCashPaid')} fill="none" stroke="#d38155" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={points('ownerCashPaid')} fill="none" stroke="#195d50" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={points('renterCashPaid')} fill="none" stroke="#9a4d2b" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
       {annual.length === 1 ? <>
-        <circle cx={x(0)} cy={y(annual[0].ownerCashPaid)} r="6" fill="#116a5b" />
-        <circle cx={x(0)} cy={y(annual[0].renterCashPaid)} r="6" fill="#d38155" />
+        <circle cx={x(0)} cy={y(annual[0].ownerCashPaid)} r="6" fill="#195d50" />
+        <circle cx={x(0)} cy={y(annual[0].renterCashPaid)} r="6" fill="#9a4d2b" />
         <text x="52" y="257" fontSize="12" fill="#64756f">Year 1</text>
       </> : <><text x="52" y="257" fontSize="12" fill="#64756f">Year 1</text><text x="702" y="257" textAnchor="end" fontSize="12" fill="#64756f">Year {annual.length}</text></>}
     </svg>
